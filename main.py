@@ -10,30 +10,40 @@ class SmartHomeGUI:
         self.root.minsize(400, 100)
         self.root.title("Smart Home Management System")
 
-        my_light = light.Light
-        my_thermostat = thermostat.Thermostat
-        my_camera = camera.Camera
+        self.my_light = light.Light
+        self.my_thermostat = thermostat.Thermostat
+        self.my_camera = camera.Camera
         
-        self.devices = [my_light().type, my_thermostat().type, my_camera().type]
-
+        self.devices = [self.my_light().type, self.my_thermostat().type, self.my_camera().type]
+        self.attributes =[self.my_light().message, self.my_thermostat().message, self.my_camera().message]
+        self.power_ons = [self.my_light.power_on, self.my_thermostat.temp_set, self.my_camera.shutter_pictures]
         self.create_device_buttons()
+        self.create_attribute_buttons()
         self.create_input_section()
+        
 
     def create_device_buttons(self):
-        # self.device_frame = tk.Frame(self.root)
-        # self.device_frame.pack(pady=10)
-
+        """Creates buttons for each device"""
         for device in self.devices:
             btn = tk.Button(root, text=device, command=lambda d=device: self.device_clicked(d))
+            btn.pack(side=tk.LEFT, padx=5)      
+
+    def create_attribute_buttons(self):
+        """Creates buttons for the attributes of each device"""
+        for id, attribute in enumerate(self.attributes):
+            btn = tk.Button(self.root, text=attribute, command=lambda i=id: self.attribute_clicked(i))
             btn.pack(side=tk.LEFT, padx=5)
-
+        
     def device_clicked(self, device):
+        """Prints out that a device was clicked on"""
         print(f"{device} clicked!")
-
+        
+    def attribute_clicked(self, id):
+        """Runs method of the current device attribute"""
+        self.power_ons[id]()
+    
     def create_input_section(self):
-        # self.input_frame = tk.Frame(self.root)
-        # self.input_frame.pack(pady=10)
-
+        """Creates input for writing to file, enter button, and read file button"""
         self.input_label = tk.Label(root, text="Enter a message:")
         self.input_label.pack(side=tk.LEFT, padx=5)
 
@@ -47,6 +57,7 @@ class SmartHomeGUI:
         self.read_button.pack(side=tk.LEFT, padx=5)
 
     def write_file(self):
+        """Writes to file"""
         message = self.input_entry.get()
         if message:
             with open("messages.txt", "a") as file:
@@ -57,6 +68,7 @@ class SmartHomeGUI:
             print("Input Error", "Please enter a message.")
 
     def read_file(self):
+        """Opens file"""
         if os.path.exists("messages.txt"):
             with open("messages.txt", "r") as file:
                 content = file.read()

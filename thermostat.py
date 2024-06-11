@@ -2,7 +2,7 @@ import device
 
 class Thermostat(device.Device):
     """Thermostat (inherited Device)"""
-    def __init__(self,type="Thermostat", brand="LG", message="AC time!"):
+    def __init__(self,type="Thermostat", brand="LG", message="Set Temperature"):
         super().__init__(type, brand, message)
         self.type = type
         self.brand = brand
@@ -11,8 +11,9 @@ class Thermostat(device.Device):
     def power_on(self):
         """Turn on thermostat"""
         print("Powering on!")
+        self.temp_set()
     
-    def temp_set(self):
+    def temp_set():
         """Input temperature"""
         bad_input = True
         
